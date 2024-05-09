@@ -10,7 +10,7 @@ import sys, threading, queue, time
 if not dev:
     module_name = 'pacgraph'
     module_path = '/usr/bin/pacgraph'
-    if sys.version_info[1] >= 12:
+    if sys.version_info[0] >= 3 and sys.version_info[1] >= 12:
         import importlib.util
         import importlib.machinery
         loader = importlib.machinery.SourceFileLoader(module_name, module_path)
