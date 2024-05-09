@@ -8,9 +8,21 @@ from multiprocessing import Process
 import sys, threading, queue, time
 
 if not dev:
-    import imp
-    imp.load_source('pacgraph', '/usr/bin/pacgraph')
-import pacgraph
+    module_name = 'pacgraph'
+    module_path = '/usr/bin/pacgraph'
+    if sys.version_info[1] >= 12:
+        import importlib.util
+        import importlib.machinery
+        loader = importlib.machinery.SourceFileLoader(module_name, module_path)
+        spec = importlib.util.spec_from_loader(module_name, loader)
+        if spec is None:
+            raise ImportError(f'Failed to load pacgraph module at {module_path}')
+        pacgraph = importlib.util.module_from_spec(spec)
+        loader.exec_module(pacgraph)
+    else:
+        import imp
+        imp.load_source(module_name, module_path)
+        import pacgraph
 
 colors = {'sel'  : '#000',
           'uns'  : '#888',
